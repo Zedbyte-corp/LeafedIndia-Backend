@@ -1,0 +1,27 @@
+{
+  "name": "leafed-india-backend",
+  "version": "1.0.0",
+  "description": "node js backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zedbyte-corp/LeafedIndia-Backend.git"
+  },
+  "author": "Zedbyte",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zedbyte-corp/LeafedIndia-Backend/issues"
+  },
+  "homepage": "https://github.com/Zedbyte-corp/LeafedIndia-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase": "^9.16.0",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.8.4",
+    "validatorjs": "^3.22.1"
+  }
+}
