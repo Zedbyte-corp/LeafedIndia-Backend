@@ -87,6 +87,31 @@ const read = async (req, res) => {
   }
 };
 
+// ### read Product using category document ###
+
+const readCategory = async (req, res) => {
+  try {
+    const result = await ProductModel.find(
+      { "product_category": req.body.category_id }
+    );
+    if (result.length !== 0) {
+      const responseObject = response.success(
+        messageResponse.getOne("product detail"),
+        result
+      );
+      return res.status(200).json(responseObject);
+    } else {
+      const responseObject = response.error(
+        messageResponse.noResult("product detail")
+      );
+      res.status(200).json(responseObject);
+    }
+  } catch (error) {
+    const responseObject = response.error(error.message);
+    res.status(200).json(responseObject);
+  }
+};
+
 
 // ### read all Product document ###
 
@@ -176,6 +201,7 @@ const remove = async (req, res) => {
 module.exports = {
   create,
   read,
+  readCategory,
   readAll,
   update,
   remove
