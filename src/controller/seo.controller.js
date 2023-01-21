@@ -1,28 +1,30 @@
-const categoryModel = require("../model/category.model");
+const SeoModel = require("../model/seo.model");
 const response = require("../response/response");
 const messageResponse = require("../response/messages");
 
 
-// ### create category document ###
+// ### create Seo document ###
 
 const create = async (req, res) => {
-  const admin = new categoryModel({
-    category_id: req.body.category_id,
-    category_name: req.body.category_name,
+  const admin = new SeoModel({
+    page_id: req.body.page_id,
+    title: req.body.title,
+    keywords: req.body.keywords,
+    description: req.body.description
   });
   try {
-    const totalNumberOfDocuments = await categoryModel.estimatedDocumentCount();
+    const totalNumberOfDocuments = await SeoModel.estimatedDocumentCount();
     if (totalNumberOfDocuments === 0) {
       await admin.save();
       const responseObject = response.success(messageResponse.Insert);
       return res.status(200).json(responseObject);
     } else {
-      const findDocumentWithUserId = await categoryModel.find(
-          {"category_id" : req.body.category_id}
+      const findDocumentWithUserId = await SeoModel.find(
+          {"page_id" : req.body.page_id}
       );
       if (findDocumentWithUserId.length !== 0) {
         const responseObject = response.error(
-          messageResponse.alreadyExits("category_id" , req.body.category_id)
+          messageResponse.alreadyExits("page_id" , req.body.page_id)
         );
         res.status(200).json(responseObject);
       } else if (findDocumentWithUserId.length === 0) {
@@ -37,22 +39,22 @@ const create = async (req, res) => {
   }
 };
 
-// ### read category document ###
+// ### read Seo document ###
 
 const read = async (req, res) => {
   try {
-    const result = await categoryModel.find(
-      {"category_id" : req.body.category_id}
+    const result = await SeoModel.find(
+      {"page_id" : req.body.page_id}
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.getOne("category detail"),
+        messageResponse.getOne("seo detail"),
         result
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("category detail")
+        messageResponse.noResult("seo detail")
       );
       res.status(200).json(responseObject);
     }
@@ -62,22 +64,22 @@ const read = async (req, res) => {
   }
 };
 
-// ### readall category document ###
+// ### readall Seo document ###
 
 const readAll = async (req, res) => {
   try {
-    const result = await categoryModel.find(
+    const result = await SeoModel.find(
       {}
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.getOne("category detail"),
+        messageResponse.getOne("seo detail"),
         result
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("category detail")
+        messageResponse.noResult("seo detail")
       );
       res.status(200).json(responseObject);
     }
@@ -87,25 +89,27 @@ const readAll = async (req, res) => {
   }
 };
 
-// ### update category document ###
+// ### update Seo document ###
 
 
 const update = async (req, res) => {
   try {
-    const result = await categoryModel.updateOne(
-      {"category_id" : req.body.category_id},
+    const result = await SeoModel.updateOne(
+      {"page_id" : req.body.page_id},
       {
-        "category_name": req.body.category_name
+        "title": req.body.title,
+        "keywords": req.body.keywords,
+        "description": req.body.description
       }
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.updateOne("category"),
+        messageResponse.updateOne("seo"),
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("category")
+        messageResponse.noResult("seo")
       );
       res.status(200).json(responseObject);
     }
@@ -115,22 +119,22 @@ const update = async (req, res) => {
   }
 };
 
-// ### remove category document ###
+// ### remove Seo document ###
 
 const remove = async (req, res) => {
   try {
-    const result = await categoryModel.deleteOne(
-      {"category_id" : req.body.category_id}
+    const result = await SeoModel.deleteOne(
+      {"page_id" : req.body.page_id}
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.removeOne("category"),
+        messageResponse.removeOne("seo"),
         result
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("category detail")
+        messageResponse.noResult("seo detail")
       );
       res.status(200).json(responseObject);
     }

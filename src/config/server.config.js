@@ -6,5 +6,7 @@ module.exports = {
   dbUrl:
     "mongodb+srv://bustracking:123@cluster0.ufout.mongodb.net/BUS-TRACKING_TEST",
   productCollection: "LeafedInida-product",
-  categoryCollection: "LeafedInida-category"
+  categoryCollection: "LeafedInida-category",
+  galleryCollection: "LeafedInida-gallery",
+  seoCollection: "LeafedInida-seo"
 };

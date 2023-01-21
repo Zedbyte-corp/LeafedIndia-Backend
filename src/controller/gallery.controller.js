@@ -1,51 +1,43 @@
-const ProductModel = require("../model/product.model");
+const GalleryModel = require("../model/gallery.model");
 const response = require("../response/response");
 const messageResponse = require("../response/messages");
 const uploadS3 = require("../helper/aws-s3-upload-images.helper");
 const config = require("../config/aws-s3.config");
 
 
-// ### create Product document ###
+// ### create Gallery document ###
 
 const create = async (req, res) => {
   const uploadImg = uploadS3(
     config.s3CustomerBucketName,
-    req.query.product_id,
-    "user"
+    req.query.image_id,
+    "gallery"
   ).fields([
-    { name: "photos", maxCount: 5 }
+    { name: "photos", maxCount: 1 }
   ]);
   uploadImg(req, res, async (err) => {
     if (err) {
       const responseObject = response.error(messageResponse.uploadImage(err));
       return res.status(200).json(responseObject);
     } else {
-      const photos = req.files.photos.map((file) => {
-        return file.location;
-      });
-      const admin = new ProductModel({
-        product_id: req.query.product_id,
-        product_name: req.query.product_name,
-        product_category: req.query.product_category,
-        product_dimensions: req.query.product_dimensions,
-        product_variant: req.query.product_variant,
-        product_images: photos,
-        product_description: req.query.product_description,
-        product_mrp: req.query.product_mrp
+      const admin = new GalleryModel({
+        image_id: req.query.image_id,
+        image_name: req.query.image_name,
+        image_url: req.files.photos[0].location
       });
       try {
-        const totalNumberOfDocuments = await ProductModel.estimatedDocumentCount();
+        const totalNumberOfDocuments = await GalleryModel.estimatedDocumentCount();
         if (totalNumberOfDocuments === 0) {
           await admin.save();
           const responseObject = response.success(messageResponse.Insert);
           return res.status(200).json(responseObject);
         } else {
-          const findDocumentWithUserId = await ProductModel.find(
-            { "product_id": req.query.product_id }
+          const findDocumentWithUserId = await GalleryModel.find(
+            { "image_id": req.query.image_id }
           );
           if (findDocumentWithUserId.length !== 0) {
             const responseObject = response.error(
-              messageResponse.alreadyExits("product_id", req.query.product_id)
+              messageResponse.alreadyExits("image_id", req.query.image_id)
             );
             res.status(200).json(responseObject);
           } else if (findDocumentWithUserId.length === 0) {
@@ -62,22 +54,22 @@ const create = async (req, res) => {
   })
 };
 
-// ### read Product document ###
+// ### read Gallery document ###
 
 const read = async (req, res) => {
   try {
-    const result = await ProductModel.find(
-      { "product_id": req.body.product_id }
+    const result = await GalleryModel.find(
+      { "image_id": req.body.image_id }
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.getOne("product detail"),
+        messageResponse.getOne("gallery detail"),
         result
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("product detail")
+        messageResponse.noResult("gallery detail")
       );
       res.status(200).json(responseObject);
     }
@@ -88,23 +80,23 @@ const read = async (req, res) => {
 };
 
 
-// ### read all Product document ###
+// ### read all Gallery document ###
 
 
 const readAll = async (req, res) => {
   try {
-    const result = await ProductModel.find(
+    const result = await GalleryModel.find(
       {}
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.getOne("product detail"),
+        messageResponse.getOne("gallery detail"),
         result
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("product detail")
+        messageResponse.noResult("gallery detail")
       );
       res.status(200).json(responseObject);
     }
@@ -115,30 +107,25 @@ const readAll = async (req, res) => {
 };
 
 
-// ### update Product document ###
+// ### update Gallery document ###
 
 const update = async (req, res) => {
   try {
-    const result = await ProductModel.updateOne(
-      { "product_id": req.body.product_id },
+    const result = await GalleryModel.updateOne(
+      { "image_id": req.body.image_id },
       {
-        "product_name": req.body.product_name,
-        "product_category": req.body.product_category,
-        "product_dimensions": req.body.product_dimensions,
-        "product_variant": req.body.product_variant,
-        "product_images": req.body.product_images,
-        "product_description": req.body.product_description,
-        "product_mrp": req.body.product_mrp
+        "image_name": req.body.image_name,
+        "image_description": req.body.image_description,
       }
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.updateOne("product"),
+        messageResponse.updateOne("image"),
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("product")
+        messageResponse.noResult("image")
       );
       res.status(200).json(responseObject);
     }
@@ -148,22 +135,22 @@ const update = async (req, res) => {
   }
 };
 
-// ### remove Product document ###
+// ### remove Gallery document ###
 
 const remove = async (req, res) => {
   try {
-    const result = await ProductModel.deleteOne(
-      { "product_id": req.body.product_id }
+    const result = await GalleryModel.deleteOne(
+      { "image_id": req.body.image_id }
     );
     if (result.length !== 0) {
       const responseObject = response.success(
-        messageResponse.removeOne("product"),
+        messageResponse.removeOne("image"),
         result
       );
       return res.status(200).json(responseObject);
     } else {
       const responseObject = response.error(
-        messageResponse.noResult("product detail")
+        messageResponse.noResult("image detail")
       );
       res.status(200).json(responseObject);
     }

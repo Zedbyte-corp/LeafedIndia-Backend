@@ -24,7 +24,9 @@ db.once("open", () => {
 
 //Import Routes
 const product = require("./src/route/product.route");
-const category = require("./src/route/category.route")
+const category = require("./src/route/category.route");
+const gallery = require("./src/route/gallery.route");
+const seo = require("./src/route/seo.route");
 
 //MiddleWare
 app.use(cors());
@@ -34,6 +36,8 @@ app.use(express.urlencoded({ extended: true }));
 //ROUTES
 app.use("/product", product);
 app.use("/category", category);
+app.use("/gallery", gallery);
+app.use("/seo", seo);
 
 
 app.get("/", function (req, res) {
