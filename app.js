@@ -29,17 +29,17 @@ const gallery = require("./src/route/gallery.route");
 const seo = require("./src/route/seo.route");
 
 //MiddleWare
-// const whitelist = ['http://localhost:3000','https://leafedindia.web.app', 'https://app.tooljet.com/applications/cf62da44-7932-4ead-b7b6-0664a8fe18fa'];
-// const corsOptions = {
-//   credentials: true, // This is important.
-//   origin: (origin, callback) => {
-//     if(whitelist.includes(origin))
-//       return callback(null, true)
-//       callback(new Error('Not allowed by CORS'));
-//   }
-// }
-// app.use(cors(corsOptions));
-app.use(cors());
+const whitelist = ['http://localhost:3000','https://leafedindia.web.app', 'https://app.tooljet.com/applications/cf62da44-7932-4ead-b7b6-0664a8fe18fa', 'https://leafedindia-backend.onrender.com'];
+const corsOptions = {
+  credentials: true, // This is important.
+  origin: (origin, callback) => {
+    if(whitelist.includes(origin))
+      return callback(null, true)
+      callback(new Error('Not allowed by CORS'));
+  }
+}
+app.use(cors(corsOptions));
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
