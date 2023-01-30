@@ -4,9 +4,9 @@ module.exports = {
   host: "0.0.0.0",
   port: 8000,
   dbUrl:
-    "mongodb+srv://bustracking:123@cluster0.ufout.mongodb.net/BUS-TRACKING_TEST",
-  productCollection: "LeafedInida-product",
-  categoryCollection: "LeafedInida-category",
-  galleryCollection: "LeafedInida-gallery",
-  seoCollection: "LeafedInida-seo"
+    "mongodb+srv://LeafedIndia:xXqSWvsOIr8ueaiC@leafedindia.8cdpaqs.mongodb.net/LeafedInida",
+  productCollection: "product",
+  categoryCollection: "category",
+  galleryCollection: "gallery",
+  seoCollection: "seo"
 };
