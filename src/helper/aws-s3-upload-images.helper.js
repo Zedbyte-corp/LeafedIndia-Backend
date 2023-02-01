@@ -18,7 +18,8 @@ const uploadS3 = (bucketName, folderName, imageName) =>
         cb(null, { fieldName: file.fieldname });
       },
       key: function (req, file, cb) {
-        cb(null, `${imageName} ${Date.now()}`);
+        // cb(null, `${imageName} ${Date.now()}`);
+        cb(null, Date.now().toString() + file.originalname);
       },
     }),
   });
