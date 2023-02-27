@@ -5,8 +5,36 @@ const config = require("../config/aws-s3.config");
 const mailConfig = require("../config/mail.config");
 const nodemailer = require("nodemailer");
 
-
 const send = async (req, res) => {
+    try {
+        let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: mailConfig.Username,
+                pass: mailConfig.Password,
+            },
+        });
+        await transporter.sendMail({
+            from: req.query.email,
+            to: mailConfig.Username,
+            subject: req.query.name + " " + req.query.phone,
+            text: req.query.message,
+        });
+        // await transporter.sendMail({
+        //     from: req.body.email,
+        //     to: mailConfig.Username,
+        //     subject: req.body.name + " " + req.body.phone,
+        //     text: req.body.message,
+        // });
+        const responseObject = response.success(messageResponse.emailSent);
+        return res.status(200).json(responseObject);
+    } catch (error) {
+        const responseObject = response.error(error.message);
+        return res.status(200).json(responseObject);
+    }
+};
+
+const sendWithImage = async (req, res) => {
     const uploadImg = uploadS3(
         config.s3CustomerBucketName,
         req.query.phone,
@@ -47,6 +75,8 @@ const send = async (req, res) => {
     })
 };
 
+
 module.exports = {
-    send
+    send,
+    sendWithImage
 };
