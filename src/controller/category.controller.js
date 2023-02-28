@@ -1,48 +1,67 @@
-const categoryModel = require("../model/category.model");
+const CategoryModel = require("../model/category.model");
 const response = require("../response/response");
 const messageResponse = require("../response/messages");
+const uploadS3 = require("../helper/aws-s3-upload-images.helper");
+const config = require("../config/aws-s3.config");
 
 
 // ### create category document ###
 
 const create = async (req, res) => {
-  const admin = new categoryModel({
-    category_id: req.body.category_id,
-    category_name: req.body.category_name,
-  });
-  try {
-    const totalNumberOfDocuments = await categoryModel.estimatedDocumentCount();
-    if (totalNumberOfDocuments === 0) {
-      await admin.save();
-      const responseObject = response.success(messageResponse.Insert);
+  const uploadImg = uploadS3(
+    config.s3CustomerBucketName,
+    req.query.category_id,
+    "category"
+  ).fields([
+    { name: "photos", maxCount: 1 }
+  ]);
+  uploadImg(req, res, async (err) => {
+    if (err) {
+      const responseObject = response.error(messageResponse.uploadImage(err));
       return res.status(200).json(responseObject);
     } else {
-      const findDocumentWithUserId = await categoryModel.find(
-          {"category_id" : req.body.category_id}
-      );
-      if (findDocumentWithUserId.length !== 0) {
-        const responseObject = response.error(
-          messageResponse.alreadyExits("category_id" , req.body.category_id)
-        );
+      const admin = new CategoryModel({
+        category_id: req.query.category_id,
+        category_name: req.query.category_name,
+        category_description: req.query.category_description,
+        category_image: req.files.photos[0].location,
+        view: 1
+      });
+      try {
+        const totalNumberOfDocuments = await CategoryModel.estimatedDocumentCount();
+        if (totalNumberOfDocuments === 0) {
+          await admin.save();
+          const responseObject = response.success(messageResponse.Insert);
+          return res.status(200).json(responseObject);
+        } else {
+          const findDocumentWithUserId = await CategoryModel.find(
+            { "category_id": req.query.category_id }
+          );
+          if (findDocumentWithUserId.length !== 0) {
+            const responseObject = response.error(
+              messageResponse.alreadyExits("category_id", req.query.category_id)
+            );
+            res.status(200).json(responseObject);
+          } else if (findDocumentWithUserId.length === 0) {
+            await admin.save();
+            const responseObject = response.success(messageResponse.Insert);
+            return res.status(200).json(responseObject);
+          }
+        }
+      } catch (error) {
+        const responseObject = response.error(error.message);
         res.status(200).json(responseObject);
-      } else if (findDocumentWithUserId.length === 0) {
-        await admin.save();
-        const responseObject = response.success(messageResponse.Insert);
-        return res.status(200).json(responseObject);
       }
     }
-  } catch (error) {
-    const responseObject = response.error(error.message);
-    res.status(200).json(responseObject);
-  }
+  })
 };
 
 // ### read category document ###
 
 const read = async (req, res) => {
   try {
-    const result = await categoryModel.find(
-      {"category_id" : req.body.category_id}
+    const result = await CategoryModel.find(
+      { "category_id": req.body.category_id }
     );
     if (result.length !== 0) {
       const responseObject = response.success(
@@ -66,7 +85,7 @@ const read = async (req, res) => {
 
 const readAll = async (req, res) => {
   try {
-    const result = await categoryModel.find(
+    const result = await CategoryModel.find(
       {}
     );
     if (result.length !== 0) {
@@ -92,10 +111,11 @@ const readAll = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const result = await categoryModel.updateOne(
-      {"category_id" : req.body.category_id},
+    const result = await CategoryModel.updateOne(
+      { "category_id": req.body.category_id },
       {
-        "category_name": req.body.category_name
+        "category_name": req.body.category_name,
+        "category_description": req.body.category_description,
       }
     );
     if (result.length !== 0) {
@@ -119,8 +139,8 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const result = await categoryModel.deleteOne(
-      {"category_id" : req.body.category_id}
+    const result = await CategoryModel.deleteOne(
+      { "category_id": req.body.category_id }
     );
     if (result.length !== 0) {
       const responseObject = response.success(
@@ -141,9 +161,9 @@ const remove = async (req, res) => {
 };
 
 module.exports = {
-    create,
-    read,
-    readAll,
-    update,
-    remove
-  };
+  create,
+  read,
+  readAll,
+  update,
+  remove
+};

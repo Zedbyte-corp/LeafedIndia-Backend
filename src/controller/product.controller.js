@@ -23,15 +23,55 @@ const create = async (req, res) => {
       const photos = req.files.photos.map((file) => {
         return file.location;
       });
+      var dimensions = {};
+      var specifications = {};
+      var package = {};
+      var features = [];
+      var images = [];
+      req.query.product_dimensions.split(",").map((key, value) => dimensions[`Stock Layer${value + 1}`] = key);
+      req.query.product_specification.split(",").map((key, value) => {
+        switch (value) {
+          case 0:
+            specifications['Length'] = key + " CM"
+            break;
+          case 1:
+            specifications['Width'] = key + " CM"
+            break;
+          case 2:
+            specifications['Height'] = key + " CM"
+            break;
+        }
+      })
+      req.query.product_package.split(",").map((key, value) => {
+        switch (value) {
+          case 0:
+            package['Length'] = key + " CM"
+            break;
+          case 1:
+            package['Width'] = key + " CM"
+            break;
+          case 2:
+            package['Height'] = key + " CM"
+            break;
+        }
+      })
+      req.query.product_features.split(",").forEach(value => features.push(parseInt(value)))
+      photos.forEach((value) => images.push({
+        original: value,
+        thumbnail: value
+      }))
       const admin = new ProductModel({
         product_id: req.query.product_id,
         product_name: req.query.product_name,
         product_category: req.query.product_category,
-        product_dimensions: req.query.product_dimensions,
-        product_variant: req.query.product_variant,
-        product_images: photos,
+        product_dimensions: dimensions,
+        product_specification: specifications,
+        product_package: package,
+        prouct_features: features,
+        product_image: photos[0],
+        product_images: images,
         product_description: req.query.product_description,
-        product_mrp: req.query.product_mrp
+        view: 2
       });
       try {
         const totalNumberOfDocuments = await ProductModel.estimatedDocumentCount();
@@ -144,16 +184,48 @@ const readAll = async (req, res) => {
 
 const update = async (req, res) => {
   try {
+    var dimensions = {};
+    var specifications = {};
+    var package = {};
+    var features = [];
+    req.body.product_dimensions.split(",").map((key, value) => dimensions[`Stock Layer${value + 1}`] = key);
+    req.body.product_specification.split(",").map((key, value) => {
+      switch (value) {
+        case 0:
+          specifications['Length'] = key + " CM"
+          break;
+        case 1:
+          specifications['Width'] = key + " CM"
+          break;
+        case 2:
+          specifications['Height'] = key + " CM"
+          break;
+      }
+    })
+    req.body.product_package.split(",").map((key, value) => {
+      switch (value) {
+        case 0:
+          package['Length'] = key + " CM"
+          break;
+        case 1:
+          package['Width'] = key + " CM"
+          break;
+        case 2:
+          package['Height'] = key + " CM"
+          break;
+      }
+    })
+    req.body.product_features.split(",").forEach(value => features.push(parseInt(value)))
     const result = await ProductModel.updateOne(
       { "product_id": req.body.product_id },
       {
         "product_name": req.body.product_name,
         "product_category": req.body.product_category,
-        "product_dimensions": req.body.product_dimensions,
-        "product_variant": req.body.product_variant,
-        "product_images": req.body.product_images,
+        "product_dimensions": dimensions,
+        "product_specification": specifications,
+        "product_package": package,
+        "product_features": features,
         "product_description": req.body.product_description,
-        "product_mrp": req.body.product_mrp
       }
     );
     if (result.length !== 0) {

@@ -10,6 +10,18 @@ const categorySchema = mongoose.Schema({
   category_name: {
     type: String,
     require: true,
+  },
+  category_description: {
+    type: String,
+    require: true,
+  },
+  category_image: {
+    type: String,
+    require: true,
+  },
+  view:{
+    type:Number,
+    require:true
   }
 });
 

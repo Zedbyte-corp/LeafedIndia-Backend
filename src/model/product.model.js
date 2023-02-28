@@ -16,10 +16,22 @@ const productSchema = mongoose.Schema({
     require: true,
   },
   product_dimensions: {
-    type: String,
+    type: Object,
     require: true,
   },
-  product_variant: {
+  product_specification: {
+    type: Object,
+    require: true,
+  },
+  product_package: {
+    type: Object,
+    require: true,
+  },
+  product_features: {
+    type: Array,
+    require: true
+  },
+  product_image: {
     type: String,
     require: true,
   },
@@ -31,9 +43,9 @@ const productSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  product_mrp: {
-    type: String,
-    require: true,
+  view: {
+    type: Number,
+    require: true
   }
 });
 
