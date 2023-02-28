@@ -15,65 +15,65 @@ const create = async (req, res) => {
   ).fields([
     { name: "photos", maxCount: 5 }
   ]);
-  uploadImg(req, res, async (err) => {
-    if (err) {
-      const responseObject = response.error(messageResponse.uploadImage(err));
-      return res.status(200).json(responseObject);
-    } else {
-      const photos = req.files.photos.map((file) => {
-        return file.location;
-      });
-      var dimensions = {};
-      var specifications = {};
-      var package = {};
-      var features = [];
-      var images = [];
-      req.query.product_dimensions.split(",").map((key, value) => dimensions[`Stock Layer${value + 1}`] = key);
-      req.query.product_specification.split(",").map((key, value) => {
-        switch (value) {
-          case 0:
-            specifications['Length'] = key + " CM"
-            break;
-          case 1:
-            specifications['Width'] = key + " CM"
-            break;
-          case 2:
-            specifications['Height'] = key + " CM"
-            break;
-        }
-      })
-      req.query.product_package.split(",").map((key, value) => {
-        switch (value) {
-          case 0:
-            package['Length'] = key + " CM"
-            break;
-          case 1:
-            package['Width'] = key + " CM"
-            break;
-          case 2:
-            package['Height'] = key + " CM"
-            break;
-        }
-      })
-      req.query.product_features.split(",").forEach(value => features.push(parseInt(value)))
-      photos.forEach((value) => images.push({
-        original: value,
-        thumbnail: value
-      }))
-      const admin = new ProductModel({
-        product_id: req.query.product_id,
-        product_name: req.query.product_name,
-        product_category: req.query.product_category,
-        product_dimensions: dimensions,
-        product_specification: specifications,
-        product_package: package,
-        prouct_features: features,
-        product_image: photos[0],
-        product_images: images,
-        product_description: req.query.product_description,
-        view: 2
-      });
-      try {
+  try {
+    uploadImg(req, res, async (err) => {
+      if (err) {
+        const responseObject = response.error(messageResponse.uploadImage(err));
+        return res.status(200).json(responseObject);
+      } else {
+        const photos = req.files.photos.map((file) => {
+          return file.location;
+        });
+        var dimensions = {};
+        var specifications = {};
+        var package = {};
+        var features = [];
+        var images = [];
+        req.query.product_dimensions.split(",").map((key, value) => dimensions[`Stock Layer${value + 1}`] = key);
+        req.query.product_specification.split(",").map((key, value) => {
+          switch (value) {
+            case 0:
+              specifications['Length'] = key + " CM"
+              break;
+            case 1:
+              specifications['Width'] = key + " CM"
+              break;
+            case 2:
+              specifications['Height'] = key + " CM"
+              break;
+          }
+        })
+        req.query.product_package.split(",").map((key, value) => {
+          switch (value) {
+            case 0:
+              package['Length'] = key + " CM"
+              break;
+            case 1:
+              package['Width'] = key + " CM"
+              break;
+            case 2:
+              package['Height'] = key + " CM"
+              break;
+          }
+        })
+        req.query.product_features.forEach(value => features.push(parseInt(value)))
+        photos.forEach((value) => images.push({
+          original: value,
+          thumbnail: value
+        }))
+        const admin = new ProductModel({
+          product_id: req.query.product_id,
+          product_name: req.query.product_name,
+          product_category: req.query.product_category,
+          product_dimensions: dimensions,
+          product_specification: specifications,
+          product_package: package,
+          product_features: features,
+          product_image: photos[0],
+          product_images: images,
+          product_description: req.query.product_description,
+          view: 2
+        });
         const totalNumberOfDocuments = await ProductModel.estimatedDocumentCount();
         if (totalNumberOfDocuments === 0) {
           await admin.save();
@@ -94,12 +94,12 @@ const create = async (req, res) => {
             return res.status(200).json(responseObject);
           }
         }
-      } catch (error) {
-        const responseObject = response.error(error.message);
-        res.status(200).json(responseObject);
       }
-    }
-  })
+    })
+  } catch (error) {
+    const responseObject = response.error(error.message);
+    res.status(200).json(responseObject);
+  }
 };
 
 // ### read Product document ###
@@ -215,7 +215,7 @@ const update = async (req, res) => {
           break;
       }
     })
-    req.body.product_features.split(",").forEach(value => features.push(parseInt(value)))
+    req.body.product_features.forEach(value => features.push(parseInt(value)))
     const result = await ProductModel.updateOne(
       { "product_id": req.body.product_id },
       {

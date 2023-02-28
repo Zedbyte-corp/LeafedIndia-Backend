@@ -15,19 +15,19 @@ const create = async (req, res) => {
   ).fields([
     { name: "photos", maxCount: 1 }
   ]);
-  uploadImg(req, res, async (err) => {
-    if (err) {
-      const responseObject = response.error(messageResponse.uploadImage(err));
-      return res.status(200).json(responseObject);
-    } else {
-      const admin = new CategoryModel({
-        category_id: req.query.category_id,
-        category_name: req.query.category_name,
-        category_description: req.query.category_description,
-        category_image: req.files.photos[0].location,
-        view: 1
-      });
-      try {
+  try {
+    uploadImg(req, res, async (err) => {
+      if (err) {
+        const responseObject = response.error(messageResponse.uploadImage(err));
+        return res.status(200).json(responseObject);
+      } else {
+        const admin = new CategoryModel({
+          category_id: req.query.category_id,
+          category_name: req.query.category_name,
+          category_description: req.query.category_description,
+          category_image: req.files.photos[0].location,
+          view: 1
+        });
         const totalNumberOfDocuments = await CategoryModel.estimatedDocumentCount();
         if (totalNumberOfDocuments === 0) {
           await admin.save();
@@ -48,12 +48,12 @@ const create = async (req, res) => {
             return res.status(200).json(responseObject);
           }
         }
-      } catch (error) {
-        const responseObject = response.error(error.message);
-        res.status(200).json(responseObject);
       }
-    }
-  })
+    })
+  } catch (error) {
+    const responseObject = response.error(error.message);
+    res.status(200).json(responseObject);
+  }
 };
 
 // ### read category document ###
