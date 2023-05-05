@@ -10,8 +10,8 @@ const config = require("../config/aws-s3.config");
 const create = async (req, res) => {
   const uploadImg = uploadS3(
     config.s3CustomerBucketName,
-    req.query.product_id,
-    "user"
+    "products",
+    req.query.product_name
   ).fields([
     { name: "photos", maxCount: 5 }
   ]);
@@ -29,34 +29,46 @@ const create = async (req, res) => {
         var package = {};
         var features = [];
         var images = [];
-        req.query.product_dimensions.split(",").map((key, value) => dimensions[`Stock Layer${value + 1}`] = key);
+        req.query.product_dimensions.split(",").map((key, value) => {
+          switch (value) {
+            case 0:
+              dimensions['Top Dia'] = key + " MM"
+              break;
+            case 1:
+              dimensions['Height'] = key + " MM"
+              break;
+            case 2:
+              dimensions['Bottom Dia'] = key + " MM"
+              break;
+          }
+        }),
         req.query.product_specification.split(",").map((key, value) => {
           switch (value) {
             case 0:
-              specifications['Length'] = key + " CM"
+              specifications['Inner Layer'] = key + " GSM"
               break;
             case 1:
-              specifications['Width'] = key + " CM"
+              specifications['Outer layer'] = key + " GSM"
               break;
             case 2:
-              specifications['Height'] = key + " CM"
+              specifications['Cup'] = key + " GSM"
               break;
           }
         })
         req.query.product_package.split(",").map((key, value) => {
           switch (value) {
             case 0:
-              package['Length'] = key + " CM"
+              package['Length'] = key + " CMS"
               break;
             case 1:
-              package['Width'] = key + " CM"
+              package['Width'] = key + " CMS"
               break;
             case 2:
-              package['Height'] = key + " CM"
+              package['Height'] = key + " CMS"
               break;
           }
         })
-        req.query.product_features.forEach(value => features.push(parseInt(value)))
+        // req.query.product_features.forEach(value => features.push(parseInt(value)))
         photos.forEach((value) => images.push({
           original: value,
           thumbnail: value
@@ -68,7 +80,7 @@ const create = async (req, res) => {
           product_dimensions: dimensions,
           product_specification: specifications,
           product_package: package,
-          product_features: features,
+          // product_features: features,
           product_image: photos[0],
           product_images: images,
           product_description: req.query.product_description,
@@ -80,8 +92,12 @@ const create = async (req, res) => {
           const responseObject = response.success(messageResponse.Insert);
           return res.status(200).json(responseObject);
         } else {
-          const findDocumentWithUserId = await ProductModel.find(
-            { "product_id": req.query.product_id }
+          const findDocumentWithUserId = await ProductModel.find({
+            $and: [
+              { "product_id": req.query.product_id },
+              { "product_category": req.query.product_category }
+            ]
+          }
           );
           if (findDocumentWithUserId.length !== 0) {
             const responseObject = response.error(
@@ -132,7 +148,7 @@ const read = async (req, res) => {
 const readCategory = async (req, res) => {
   try {
     const result = await ProductModel.find(
-      { "product_category": req.body.category_id }
+      { "product_category": req.query.category_id }
     );
     if (result.length !== 0) {
       const responseObject = response.success(

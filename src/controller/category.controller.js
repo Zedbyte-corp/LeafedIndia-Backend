@@ -10,8 +10,8 @@ const config = require("../config/aws-s3.config");
 const create = async (req, res) => {
   const uploadImg = uploadS3(
     config.s3CustomerBucketName,
-    req.query.category_id,
-    "category"
+    "category",
+    req.query.category_id
   ).fields([
     { name: "photos", maxCount: 1 }
   ]);

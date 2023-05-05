@@ -13,7 +13,7 @@ const uploadS3 = (bucketName, folderName, imageName) =>
   multer({
     storage: multerS3({
       s3,
-      bucket: `${bucketName}/userId ${folderName}`,
+      bucket: `${bucketName}/${folderName}/${imageName}`,
       metadata: function (req, file, cb) {
         cb(null, { fieldName: file.fieldname });
       },
