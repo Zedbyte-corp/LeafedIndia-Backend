@@ -30,7 +30,7 @@ const seo = require("./src/route/seo.route");
 const mail = require("./src/route/mail.route");
 
 //MiddleWare
-// const whitelist = ['http://localhost:3000', 'https://leafedindia.web.app', 'https://app.tooljet.com/applications/cf62da44-7932-4ead-b7b6-0664a8fe18fa', 'https://leafedindia-backend.onrender.com'];
+// const whitelist = ['http://localhost:3000', 'https://leafedindia.web.app', 'https://app.tooljet.com/applications/6132e2d4-3998-4c48-9c45-86883b3386a1', 'https://leafedindia-backend.onrender.com', 'https://416f-2401-4900-1f2c-2b87-f48f-3841-cd1a-36bc.ngrok-free.app'];
 // const corsOptions = {
 //   credentials: true, // This is important.
 //   origin: (origin, callback) => {

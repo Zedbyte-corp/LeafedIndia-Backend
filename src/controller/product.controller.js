@@ -42,19 +42,19 @@ const create = async (req, res) => {
               break;
           }
         }),
-        req.query.product_specification.split(",").map((key, value) => {
-          switch (value) {
-            case 0:
-              specifications['Inner Layer'] = key + " GSM"
-              break;
-            case 1:
-              specifications['Outer layer'] = key + " GSM"
-              break;
-            case 2:
-              specifications['Cup'] = key + " GSM"
-              break;
-          }
-        })
+          req.query.product_specification.split(",").map((key, value) => {
+            switch (value) {
+              case 0:
+                specifications['Inner Layer'] = key + " GSM"
+                break;
+              case 1:
+                specifications['Outer layer'] = key + " GSM"
+                break;
+              case 2:
+                specifications['Cup'] = key + " GSM"
+                break;
+            }
+          })
         req.query.product_package.split(",").map((key, value) => {
           switch (value) {
             case 0:
@@ -147,9 +147,25 @@ const read = async (req, res) => {
 
 const readCategory = async (req, res) => {
   try {
-    const result = await ProductModel.find(
-      { "product_category": req.query.category_id }
-    );
+    const result = await ProductModel.
+    aggregate([
+      { $match: { "product_category": req.query.category_id } },
+      {
+        $addFields: {
+          product_id_numeric: {
+            $toInt: {
+              $substr: [
+                "$product_id",
+                { $indexOfCP: ["$product_id", { $substrCP: ["0", 0, 1] }] },
+                -1
+              ]
+            }
+          }
+        }
+      },
+      { $sort: { product_id_numeric: 1 } },
+      { $project: { product_id_numeric: 0 } }
+    ]);
     if (result.length !== 0) {
       const responseObject = response.success(
         messageResponse.getOne("product detail"),
