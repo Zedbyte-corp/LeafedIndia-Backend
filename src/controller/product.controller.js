@@ -23,54 +23,54 @@ const create = async (req, res) => {
 				const photos = req.files.photos.map((file) => {
 					return file.location;
 				});
-				var dimensions = {};
-				var specifications = {};
-				var package = {};
+				// var dimensions = {};
+				// var specifications = {};
+				// var package = {};
 				// var features = [];
 				var images = [];
-				req.query.product_dimensions.split(",").map((key, value) => {
-					switch (value) {
-						case 0:
-							dimensions["Top Dia"] = key + " MM";
-							break;
-						case 1:
-							dimensions["Height"] = key + " MM";
-							break;
-						case 2:
-							dimensions["Bottom Dia"] = key + " MM";
-							break;
-					}
-				}),
-					req.query.product_specification
-						.split(",")
-						.map((key, value) => {
-							switch (value) {
-								case 0:
-									specifications["Inner Layer"] =
-										key + " GSM";
-									break;
-								case 1:
-									specifications["Outer layer"] =
-										key + " GSM";
-									break;
-								case 2:
-									specifications["Cup"] = key + " GSM";
-									break;
-							}
-						});
-				req.query.product_package.split(",").map((key, value) => {
-					switch (value) {
-						case 0:
-							package["Length"] = key + " CMS";
-							break;
-						case 1:
-							package["Width"] = key + " CMS";
-							break;
-						case 2:
-							package["Height"] = key + " CMS";
-							break;
-					}
-				});
+				// req.query.product_dimensions.split(",").map((key, value) => {
+				// 	switch (value) {
+				// 		case 0:
+				// 			dimensions["Top Dia"] = key + " MM";
+				// 			break;
+				// 		case 1:
+				// 			dimensions["Height"] = key + " MM";
+				// 			break;
+				// 		case 2:
+				// 			dimensions["Bottom Dia"] = key + " MM";
+				// 			break;
+				// 	}
+				// }),
+				// 	req.query.product_specification
+				// 		.split(",")
+				// 		.map((key, value) => {
+				// 			switch (value) {
+				// 				case 0:
+				// 					specifications["Inner Layer"] =
+				// 						key + " GSM";
+				// 					break;
+				// 				case 1:
+				// 					specifications["Outer layer"] =
+				// 						key + " GSM";
+				// 					break;
+				// 				case 2:
+				// 					specifications["Cup"] = key + " GSM";
+				// 					break;
+				// 			}
+				// 		});
+				// req.query.product_package.split(",").map((key, value) => {
+				// 	switch (value) {
+				// 		case 0:
+				// 			package["Length"] = key + " CMS";
+				// 			break;
+				// 		case 1:
+				// 			package["Width"] = key + " CMS";
+				// 			break;
+				// 		case 2:
+				// 			package["Height"] = key + " CMS";
+				// 			break;
+				// 	}
+				// });
 				// req.query.product_features.forEach(value => features.push(parseInt(value)))
 				photos.forEach((value) =>
 					images.push({
@@ -230,39 +230,39 @@ const readAll = async (req, res) => {
 
 const update = async (req, res) => {
 	try {
-		var dimensions = {};
-		var specifications = {};
-		var package = {};
+		// var dimensions = {};
+		// var specifications = {};
+		// var package = {};
 		// var features = [];
-		req.body.product_dimensions
-			.split(",")
-			.map((key, value) => (dimensions[`Stock Layer${value + 1}`] = key));
-		req.body.product_specification.split(",").map((key, value) => {
-			switch (value) {
-				case 0:
-					specifications["Length"] = key + " CM";
-					break;
-				case 1:
-					specifications["Width"] = key + " CM";
-					break;
-				case 2:
-					specifications["Height"] = key + " CM";
-					break;
-			}
-		});
-		req.body.product_package.split(",").map((key, value) => {
-			switch (value) {
-				case 0:
-					package["Length"] = key + " CM";
-					break;
-				case 1:
-					package["Width"] = key + " CM";
-					break;
-				case 2:
-					package["Height"] = key + " CM";
-					break;
-			}
-		});
+		// req.body.product_dimensions
+		// 	.split(",")
+		// 	.map((key, value) => (dimensions[`Stock Layer${value + 1}`] = key));
+		// req.body.product_specification.split(",").map((key, value) => {
+		// 	switch (value) {
+		// 		case 0:
+		// 			specifications["Length"] = key + " CM";
+		// 			break;
+		// 		case 1:
+		// 			specifications["Width"] = key + " CM";
+		// 			break;
+		// 		case 2:
+		// 			specifications["Height"] = key + " CM";
+		// 			break;
+		// 	}
+		// });
+		// req.body.product_package.split(",").map((key, value) => {
+		// 	switch (value) {
+		// 		case 0:
+		// 			package["Length"] = key + " CM";
+		// 			break;
+		// 		case 1:
+		// 			package["Width"] = key + " CM";
+		// 			break;
+		// 		case 2:
+		// 			package["Height"] = key + " CM";
+		// 			break;
+		// 	}
+		// });
 		// req.body.product_features.forEach((value) =>
 		// 	features.push(parseInt(value))
 		// );
