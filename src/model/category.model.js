@@ -24,7 +24,7 @@ const categorySchema = mongoose.Schema({
 		require: true,
 	},
 	pre_category_id: {
-		type: Number,
+		type: String,
 		require: true,
 	},
 });
