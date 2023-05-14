@@ -15,11 +15,11 @@ const db = mongoose.connection;
 
 //checking the db connection
 db.on("error", (err) => {
-  console.log(err);
+	console.log(err);
 });
 
 db.once("open", () => {
-  console.log("Db connected......");
+	console.log("Db connected......");
 });
 
 //Import Routes
@@ -51,12 +51,11 @@ app.use("/gallery", gallery);
 app.use("/seo", seo);
 app.use("/mail", mail);
 
-
 app.get("/", function (req, res) {
-  res.send("<p>hello welcome to LeafedIndia backend</p>");
+	res.send("<p>hello welcome to LeafedIndia backend</p>");
 });
 
 //Listening to the server
 app.listen(port, host, function () {
-  console.log(`Server is running on Host: ${host}:${port}`);
+	console.log(`Server is running on Host: ${host}:${port}`);
 });
