@@ -156,8 +156,13 @@ const create = async (req, res) => {
 
 const read = async (req, res) => {
 	try {
-		const result = await ProductModel.find({
-			product_id: req.body.product_id,
+		const result = await ProductModel.find(
+			{
+				$and: [
+					{product_id: req.query.product_id},
+					{product_category: req.query.product_category}
+				 ]
+			
 		});
 		if (result.length !== 0) {
 			const responseObject = response.success(
