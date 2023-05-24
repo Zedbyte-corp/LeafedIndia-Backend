@@ -35,13 +35,13 @@ const create = async (req, res) => {
 						.map((key, value) => {
 							switch (value) {
 								case 0:
-									dimensions["Top Dia"] = key + " MM";
+									dimensions["Top Dia"] = key;
 									break;
 								case 1:
-									dimensions["Height"] = key + " MM";
+									dimensions["Height"] = key;
 									break;
 								case 2:
-									dimensions["Bottom Dia"] = key + " MM";
+									dimensions["Bottom Dia"] = key;
 									break;
 							}
 						}),
@@ -51,14 +51,14 @@ const create = async (req, res) => {
 								switch (value) {
 									case 0:
 										specifications["Inner Layer"] =
-											key + " GSM";
+											key;
 										break;
 									case 1:
 										specifications["Outer layer"] =
-											key + " GSM";
+											key;
 										break;
 									case 2:
-										specifications["Cup"] = key + " GSM";
+										specifications["Cup"] = key;
 										break;
 								}
 							});
@@ -67,13 +67,13 @@ const create = async (req, res) => {
 						.map((key, value) => {
 							switch (value) {
 								case 0:
-									package["Length"] = key + " CMS";
+									package["Length"] = key;
 									break;
 								case 1:
-									package["Width"] = key + " CMS";
+									package["Width"] = key;
 									break;
 								case 2:
-									package["Height"] = key + " CMS";
+									package["Height"] = key;
 									break;
 							}
 						});
